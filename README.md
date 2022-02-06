@@ -1,34 +1,84 @@
-# typescript-library-template
+# dom-controller
 
-This is a template repository for developing libraries for Browser/Node.js with TypeScript.
+## Example Usage
+#### index.html
+```html
+<head>
+	<!-- include the library -->
+	<script src="dom-controller/bundle.js"></script>
+	<!-- reference the controller -->
+	<link controller-name="sun-fish" href="sea/fish/sunfish.js" />
+</head>
+<body>
+	<!-- controller will attach to this div -->	
+	<div controller="sun-fish"></div>
+</body>
+```
+#### /sea/fish/sunfish.js
+```js
+DomController.registerController(class SunFish {
+	attach() {
+		/* add your logic to an element */
+		this.element.classList.add('fishy');
+	}
+	detach() {
+		/* clean up on removal or controller change */
+		this.element.classList.remove('fishy');
+	}
+});
+```
+In the above, the `/sea/fish/sunfish.js` controller is dynamically loaded in a `script` element. Once it's loaded, the `attach()` method is called and the `element` property is populated with the element instance. When the element is removed, `detach()` is called, and the `element` property is set to null.
 
-## How to publish to npm
 
-Rewrite the following items in package.json accordingly.
 
-* name
-* description
-* keywords
-* repository
-* author
-* bugs
-* homepage
+## Controller In TypeScript
+```typescript
+import  'dom-controller/window';
+import { IController } from 'dom-controller/IController';
 
-Use the following command to confirm that TypeScript to JavaScript compiles successfully.
+class ToDo implements IController<HTMLUListElement> {
+	element: HTMLAreaElement;
+	attach(): Promise<void> { }
+	detach(): Promise<void> { }
+}
 
-```bash
-$ npm run build
+window.DomController.registerController(ToDo);
 ```
 
-Tag the commit with the following command before publishing to npm.
+Both the `IController` interface and `window` ambient should be zero cost abstractions that add no weight to your build size.
 
-```bash
-$ git tag -a v1.0.0
-$ git push origin tags/v1.0.0
+## Lifecycle Events
+`controller.attached` is dispatched once a controller is attached.
+`controller.detached` is dispatched when the controller is detached.
+
+## Ideal Usage (Opinion)
+#### index.html
+```html
+<head>
+	<!-- include the library from a CDN -->
+	<script src="https://unpkg.com/dom-controller"></script>
+	<!-- preload as immutable, for an SPA feel -->
+	<link
+		rel="preload"  as="script"
+		controller-name="sun-fish"
+		href="sea/fish/sunfish.js?hash=A3EA..."
+	/>
+</head>
+<body>
+	<!-- controller will attach to this div -->	
+	<div controller="sun-fish"></div>
+</body>
 ```
-
-Finally, use the following command to publish the tagged commit to NPM.
-
-```bash
-$ npm run publish
+#### /sea/fish/sunfish.js
+```js
+DomController.registerController(class SunFish {
+	attach() {
+		/* add your logic to an element */
+		this.element.classList.add('fishy');
+	}
+	detach() {
+		/* clean up on removal or controller change */
+		this.element.classList.remove('fishy');
+	}
+});
 ```

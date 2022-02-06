@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>controller tests</title>
+
+		<link rel="shortcut icon" type="image/png" href="support/jasmine-4.0.0/jasmine_favicon.png">
+		<link rel="stylesheet" href="support/jasmine-4.0.0/jasmine.css">
+		<link rel="preload" as="script" controller-name="attach-on-load" href="controller.js" />
+		<link rel="preload" as="script" controller-name="attach-on-insert" href="controller.js" />
+		<link rel="preload" as="script" controller-name="detach-when-removed" href="controller.js" />
+		<link rel="preload" as="script" controller-name="attach-on-inner-html" href="controller.js" />
+
+		<script src="support/jasmine-4.0.0/jasmine.js"></script>
+		<script src="support/jasmine-4.0.0/jasmine-html.js"></script>
+		<script src="support/jasmine-4.0.0/boot0.js"></script>
+		<!-- optional: include a file here that configures the Jasmine env -->
+		<script src="support/jasmine-4.0.0/boot1.js"></script>
+		<script>jasmine.getEnv().configure({ random: false });</script>
+		<script async src="../dist/bundle.js"></script>
+		<script async src="controller.js"></script>
+	</head>
+
+	<body>
+		<main></main>
+		<div controller="attach-on-load"></div>
+		<div controller="attach-on-load-no-alias"></div>
+		
+		<!-- include spec files here... -->
+		<script src="specs.js"></script>
+	</body>
+</html>

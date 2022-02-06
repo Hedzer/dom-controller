@@ -1,5 +1,5 @@
-import resolve from '@rollup/plugin-node-resolve';
 import path from 'path';
+import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
 const { entryPoints, entryPointPaths } = require('./entry-points');
@@ -49,19 +49,17 @@ export default [
     external: devDependencies,
     output: [
       {
-        name: packageJson.name,
+        name: packageJson.globalThis,
         file: `./dist/bundle.js`,
-        format: 'umd',
+        format: 'iife',
         sourcemap: true,
-        exports: 'named',
         externalLiveBindings: false,
       },
       {
-        name: packageJson.name,
+        name: packageJson.globalThis,
         file: `./dist/bundle.min.js`,
         format: 'umd',
         sourcemap: true,
-        exports: 'named',
         externalLiveBindings: false,
         plugins: [
           terser(),
