@@ -2,7 +2,7 @@
   "name": "dom-controller",
   "version": "0.1.0",
   "description": "Adds controller logic to elements through attributes",
-  "private": false,
+  "private": true,
   "keywords": [
     "controller",
     "behavior",

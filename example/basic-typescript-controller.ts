@@ -2,7 +2,7 @@ import 'dom-controller/window';
 
 import { IController } from 'dom-controller/IController';
 
-class ToDo implements IController<HTMLUListElement> {
+class SomeLogic implements IController<HTMLDivElement> {
 	element: HTMLDivElement;
 	async attach(): Promise<void> {
 		throw new Error('Method not implemented.');
@@ -12,4 +12,4 @@ class ToDo implements IController<HTMLUListElement> {
 	}
 }
 
-window.DomController.registerController(ToDo);
+window.DomController.registerController(SomeLogic);
