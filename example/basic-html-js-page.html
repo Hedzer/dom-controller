@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>To Do</title>
+
+	<!-- Include the dom-controller library -->
+	<script async src="../../dist/bundle.js"></script>
+
+	<!-- Assign an alias to the controller + preload it -->
+	<link rel="preload" as="script" controller-name="todo-list" href="todo-list-ctrl.js" />
+</head>
+<body>
+	<ul controller="todo-list">
+		<li>Some Todo</li>
+	</ul>
+</body>
+</html>

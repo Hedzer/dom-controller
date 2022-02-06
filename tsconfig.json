@@ -4,7 +4,7 @@
     "module": "es2015",
     "moduleResolution": "node",
     "strict": true,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "declaration": true,
     "sourceMap": true,
     "declarationMap": true,
@@ -21,10 +21,12 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "downlevelIteration": false,
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"]
-    }
+    },
+    "lib": ["es2017", "DOM"]
   },
   "include": ["src/**/*.ts"]
 }
