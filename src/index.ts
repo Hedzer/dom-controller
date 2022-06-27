@@ -12,6 +12,7 @@ import { IController } from './IController';
 import { IDomController } from './IDomController';
 import { TController } from './types/TController';
 import { TResolver } from './types/TResolver';
+import { _window } from './window'
 
 class DomController implements IDomController {
 	private resolver: TResolver = this.defaultResolver;
@@ -257,4 +258,4 @@ setTimeout(() => {
 
 export default instance;
 
-export { IController, IDomController, DomController }
+export { IController, IDomController, DomController, _window as window }

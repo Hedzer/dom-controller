@@ -6,3 +6,9 @@ declare global {
 		DomController: IDomController,
 	}
 }
+
+
+export const _window: Window & {
+	__DomControllers?: Array<Function>,
+	DomController: IDomController,
+} = window;
