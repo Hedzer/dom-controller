@@ -1,6 +1,6 @@
 {
   "name": "dom-controller",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Adds controller logic to elements through attributes",
   "private": false,
   "keywords": [
@@ -31,7 +31,9 @@
     "prepare-dist": "node tools/prepare-dist.js",
     "prepare": "npm run build",
     "clean": "rimraf -r dist",
-    "test": "jasmine-browser-runner runSpecs"
+    "test": "jasmine-browser-runner runSpecs",
+	"publish": "cd dist && npm publish",
+	"prepublishOnly": "echo Run npm run publish && exit 1"
   },
   "repository": {
     "type": "git",

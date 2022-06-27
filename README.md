@@ -37,7 +37,7 @@ import { window } from 'dom-controller/window';
 import { IController } from 'dom-controller';
 
 class ToDo implements IController<HTMLUListElement> {
-    element: HTMLUListElement;
+    element!: HTMLUListElement;
     attach(): Promise<void> { }
     detach(): Promise<void> { }
 }
