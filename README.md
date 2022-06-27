@@ -33,7 +33,6 @@ In the above, the `/sea/fish/sunfish.js` controller is dynamically loaded in a `
 
 ## Controller In TypeScript
 ```typescript
-import 'dom-controller/window';
 import { IController } from 'dom-controller';
 
 class ToDo implements IController<HTMLUListElement> {
@@ -42,10 +41,11 @@ class ToDo implements IController<HTMLUListElement> {
     detach(): Promise<void> { }
 }
 
+//@ts-ignore
 window.DomController.registerController(ToDo);
 ```
 
-Both the `IController` interface and `window` ambient should be zero cost abstractions that add no weight to your build size.
+The `IController` interface should be a zero cost abstraction that adds no weight to your build size.
 
 ## Lifecycle Events
 `controller.attached` is dispatched once a controller is attached.

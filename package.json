@@ -1,6 +1,6 @@
 {
   "name": "dom-controller",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Adds controller logic to elements through attributes",
   "private": false,
   "keywords": [
