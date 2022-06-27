@@ -256,3 +256,5 @@ setTimeout(() => {
 }, 0);
 
 export default instance;
+
+export { IController, IDomController, DomController }

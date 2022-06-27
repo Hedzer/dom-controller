@@ -34,10 +34,10 @@ In the above, the `/sea/fish/sunfish.js` controller is dynamically loaded in a `
 ## Controller In TypeScript
 ```typescript
 import  'dom-controller/window';
-import { IController } from 'dom-controller/IController';
+import { IController } from 'dom-controller';
 
 class ToDo implements IController<HTMLUListElement> {
-    element: HTMLAreaElement;
+    element: HTMLUListElement;
     attach(): Promise<void> { }
     detach(): Promise<void> { }
 }
