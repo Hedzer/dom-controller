@@ -7,8 +7,9 @@ declare global {
 	}
 }
 
-
-export const _window: Window & {
+const _window: Window & {
 	__DomControllers?: Array<Function>,
 	DomController: IDomController,
 } = window;
+
+export { _window as window }
