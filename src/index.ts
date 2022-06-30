@@ -221,6 +221,7 @@ class DomController implements IDomController {
 					.catch(err => err);
 				this.resolvedHrefs[href] = imported;
 				this.resolved[controller] = imported;
+				return imported;
 			default:
 				
 		}
@@ -256,5 +257,3 @@ setTimeout(() => {
 }, 0);
 
 export default instance;
-
-export { IController, IDomController, DomController }

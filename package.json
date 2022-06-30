@@ -1,6 +1,6 @@
 {
   "name": "dom-controller",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Adds controller logic to elements through attributes",
   "private": false,
   "keywords": [
@@ -32,8 +32,9 @@
     "prepare": "npm run build",
     "clean": "rimraf -r dist",
     "test": "jasmine-browser-runner runSpecs",
-	"publish": "npm run build && cd dist && npm publish",
-	"prepublishOnly": "echo Run npm run publish && exit 1"
+    "publish": "npm run build && cd dist && npm publish",
+    "prepublishOnly": "echo Run npm run publish && exit 1",
+    "precommit": "node tools/update-version.js && git add README.md"
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,7 @@
     "@rollup/plugin-node-resolve": "^13.0.4",
     "jasmine-browser-runner": "^1.0.0",
     "jasmine-core": "^4.0.0",
+    "pre-commit": "^1.2.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.56.3",
     "rollup-plugin-terser": "^7.0.2",
@@ -59,5 +61,8 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "pre-commit": [
+    "precommit"
+  ]
 }
