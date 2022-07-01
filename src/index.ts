@@ -133,7 +133,7 @@ class DomController implements IDomController {
 			.then(res => {
 				const controller = new res();
 				controller.element = element;
-				controller.attach();
+				controller.attach(element);
 				element[CONTROLLER_KEY] = controller;
 				element[CONTROLLER_NAME_KEY] = currentValue;
 				element.dispatchEvent(new CustomEvent(this.EVENT_ATTACHED, { detail: { alias: currentValue, controller } }));
@@ -153,7 +153,7 @@ class DomController implements IDomController {
 			const controller = el[CONTROLLER_KEY] as IController<HTMLElement>;
 			if (controller && controller.detach) {
 				const alias = el[CONTROLLER_NAME_KEY];
-				controller.detach();
+				controller.detach(controller.element!);
 				controller.element = null;
 				delete el[CONTROLLER_KEY];
 				delete el[CONTROLLER_NAME_KEY];

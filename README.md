@@ -5,7 +5,7 @@
 ```html
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.2.7/bundle.min.js"></script>
+    <script src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
     <!-- reference the controller -->
     <link controller-name="sun-fish" href="sea/fish/sunfish.js" />
 </head>
@@ -17,13 +17,13 @@
 #### /sea/fish/sunfish.js
 ```js
 DomController.registerController(class SunFish {
-    attach() {
+    attach(element) {
         /* add your logic to an element */
-        this.element.classList.add('fishy');
+        element.classList.add('fishy');
     }
-    detach() {
+    detach(element) {
         /* clean up on removal or controller change */
-        this.element.classList.remove('fishy');
+        element.classList.remove('fishy');
     }
 });
 ```
@@ -36,8 +36,8 @@ import { IController } from 'dom-controller/IController';
 
 class ToDo implements IController<HTMLElement> {
     element!: HTMLElement;
-    async attach(): Promise<void> { }
-    async detach(): Promise<void> { }
+    async attach(element: HTMLElement): Promise<void> { }
+    async detach(element: HTMLElement): Promise<void> { }
 }
 
 //@ts-ignore
@@ -55,15 +55,15 @@ import { IController } from 'dom-controller/IController';
 
 export default class ToDo implements IController<HTMLElement> {
     element!: HTMLElement;
-    async attach(): Promise<void> { }
-    async detach(): Promise<void> { }
+    async attach(element: HTMLElement): Promise<void> { }
+    async detach(element: HTMLElement): Promise<void> { }
 }
 ```
 
 ```html
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.2.7/bundle.min.js"></script>
+    <script src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
     <!-- reference the controller -->
     <link controller-name="to-do" href="controllers/todo.mjs" />
 </head>
@@ -86,13 +86,13 @@ The `type-is` attribute will override any automatic detection of how to load the
 ## Hardcoding Controller Names
 ```js
 DomController.registerController(class SunFish {
-    async attach() {
+    async attach(element) {
         /* add your logic to an element */
-        this.element.classList.add('fishy');
+        element.classList.add('fishy');
     }
-    async detach() {
+    async detach(element) {
         /* clean up on removal or controller change */
-        this.element.classList.remove('fishy');
+        element.classList.remove('fishy');
     }
 }, 'my-hardcoded-name');
 //  ^^^^ this will now be hardcoded
@@ -101,7 +101,7 @@ Now you can just import it as a script with zero indirection.
 ```html
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.2.7/bundle.min.js"></script>
+    <script src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
     <!-- reference the controller -->
 	<script src="controllers/todo.js"></script>
 </head>
@@ -117,9 +117,9 @@ Now you can just import it as a script with zero indirection.
 ```html
 <head>
     <!-- include the library from a CDN -->
-    <script src="https://unpkg.com/dom-controller@0.2.7/bundle.min.js"></script>
+    <script defer src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
     <!-- preload as immutable, for an SPA feel -->
-    <link rel="preload" as="script" controller-name="sun-fish" href="sea/fish/sunfish.js?v1.2.3" />
+    <link rel="preload" as="script" controller-name="sun-fish" href="sea/fish/sunfish.mjs?v1.2.3" />
 </head>
 <body>
     <!-- controller will attach to this div -->	
@@ -128,17 +128,22 @@ Now you can just import it as a script with zero indirection.
 ```
 #### /sea/fish/sunfish.js
 ```js
-DomController.registerController(class SunFish {
-    attach() {
+export default class SunFish {
+    attach(element) {
         /* add your logic to an element */
-        this.element.classList.add('fishy');
+        element.classList.add('fishy');
     }
-    detach() {
+    detach(element) {
         /* clean up on removal or controller change */
-        this.element.classList.remove('fishy');
+        element.classList.remove('fishy');
     }
-});
+};
 ```
+
+## Script Placement
+If you are using modules, i.e. mjs/import/export, and loading using a `link` controller alias, then the `Dom-Controller` library can be loaded anytime anywhere.
+
+If you aren't using modules, or you're using the `window.DomController.registerController` call then the library needs to be loaded before any controller. You can speed up loading by using the defer attribute `<script defer ...>`.
 
 ### Run Tests
 Run `npx http-server` at the project root, and in your browser navigate to `http://127.0.0.1:8080/spec/SpecRunner.html`. Adding more tests and higher quality tests is a "to do".
