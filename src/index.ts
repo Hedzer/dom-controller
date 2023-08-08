@@ -87,12 +87,12 @@ class DomController implements IDomController {
 			
 			// process addition or removal of elements
 			if (isElementChange) {
-				if (hasController(mutation.target)) { this.applyController(null, mutation.target); }
+				if (hasControllerAttr(mutation.target)) { this.applyController(null, mutation.target); }
 
 				// detach for removed nodes
 				for (let i = 0; i < mutation.removedNodes.length; i++) {
 					const node = mutation.removedNodes[i] as HTMLElement;
-					if (hasController(node)) {
+					if (hasControllerAttr(node)) {
 						this.detachController(node);
 					}
 				}
@@ -100,12 +100,18 @@ class DomController implements IDomController {
 				// attach for added nodes
 				for (let i = 0; i < mutation.addedNodes.length; i++) {
 					const node = mutation.addedNodes[i] as HTMLElement;
-					if (!hasController(node)) { continue; }
+					if ('querySelectorAll' in node) {
+						if (hasControllerAttr(node)) {
+							this.applyController(null, node);
+						}
 
-					this.applyController(null, node);
+						node
+							.querySelectorAll(`[${TARGET_ATTRIBUTE}]`)
+							.forEach(element => this.applyController(null, element));
+					}
 				}
 				
-				return;
+				continue;
 			}
 			this.applyController(mutation.oldValue, target);
 		}
@@ -230,9 +236,11 @@ class DomController implements IDomController {
 	}
 }
 
-function hasController(node: Node): boolean {
-	if (node.nodeType == Node.TEXT_NODE) { return false; }
-	return !!((node as HTMLElement).getAttribute(TARGET_ATTRIBUTE));
+function hasControllerAttr(node: Node): boolean {
+	if ('getAttribute' in node) {
+		return !!((node as HTMLElement).getAttribute(TARGET_ATTRIBUTE));
+	}
+	return false;
 }
 
 function fileNameFromUrl(url: string) {
@@ -247,6 +255,7 @@ function fileNameFromUrl(url: string) {
 const instance = new DomController();
 
 setTimeout(() => {
+	// @ts-ignore
 	if (!('DomController' in window)) { window.DomController = instance; }
 	if ('__DomControllers' in window) {
 		window

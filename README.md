@@ -1,149 +1,201 @@
 # dom-controller
 
 ## Example Usage
-#### index.html
 ```html
+<!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
+    <script src="https://unpkg.com/dom-controller@0.4.0/bundle.min.js" defer></script>
+
     <!-- reference the controller -->
-    <link controller-name="sun-fish" href="sea/fish/sunfish.js" />
+    <link controller-name="fancy" href="/controllers/to-do/fancy.mjs" />
 </head>
 <body>
-    <!-- controller will attach to this div -->	
-    <div controller="sun-fish"></div>
+    <!-- controller will attach to this ul -->	
+    <ul controller="fancy">
+        <li>Caviar</li>
+        <li>Champagne</li>
+    </ul>
 </body>
 ```
-#### /sea/fish/sunfish.js
+
 ```js
-DomController.registerController(class SunFish {
-    attach(element) {
-        /* add your logic to an element */
-        element.classList.add('fishy');
-    }
-    detach(element) {
-        /* clean up on removal or controller change */
-        element.classList.remove('fishy');
-    }
-});
-```
-In the above, the `/sea/fish/sunfish.js` controller is dynamically loaded in a `script` element. Once it's loaded, the `attach()` method is called and the `element` property is populated with the element instance. When the element is removed, `detach()` is called, and the `element` property is set to null.
-
-
-## Controller In TypeScript
-```typescript
-import { IController } from 'dom-controller/IController';
-
-class ToDo implements IController<HTMLElement> {
-    element!: HTMLElement;
-    async attach(element: HTMLElement): Promise<void> { }
-    async detach(element: HTMLElement): Promise<void> { }
+// controllers/to-do/fancy.mjs
+export default class FancyController {
+    async attach(element) { }
+    async detach(element) { }
 }
-
-//@ts-ignore
-window.DomController.registerController(ToDo);
 ```
 
-The `IController` interface should be a zero cost abstraction that adds no weight to your build size.
-
-## TypeScript + Import/Export
-If you're building using a build target that outputs module syntax, using `import` or `export`, you must export the class as default.
-If you don't you'll have to call `window.DomController.registerController` manually inside the file.
+You can also use TypeScript.
 ```typescript
-// file: controllers/todo.mjs
+// controllers/to-do/fancy.ts
 import { IController } from 'dom-controller/IController';
 
-export default class ToDo implements IController<HTMLElement> {
+export default class FancyController implements IController<HTMLElement> {
     element!: HTMLElement;
     async attach(element: HTMLElement): Promise<void> { }
     async detach(element: HTMLElement): Promise<void> { }
 }
 ```
 
+### Lifecycle calls
+`attach()` is called when a controller is attached to an element. i.e. When the `controller` attribute is set to the name of a controller.
+
+`detach()` is called when a controller is detached. This happens when an element is removed or when the `controller` attribute is changed to something new.
+
+### Load as module
+Sometimes you need a `.js` to act like `.mjs`. To do this add `type-is="module"`
+
+example:
 ```html
+<link
+    type-is="module"
+    controller-name="fancy"
+    href="/controllers/to-do/fancy.js"
+/>
+```
+
+### Using preload
+Preload will tell your browser to load the scripts in advance. This is especially useful if you add immutable headers & a cache busting parameter.
+
+```html
+<link
+    type-is="module"
+    controller-name="fancy"
+    href="/controllers/to-do/fancy.js"
+    rel="preload" as="script"
+    crossOrigin="anonymous"
+/>
+```
+
+### Old-school loading, in order
+```html
+<!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
+    <script src="https://unpkg.com/dom-controller@0.4.0/bundle.min.js" defer></script>
+
     <!-- reference the controller -->
-    <link controller-name="to-do" href="controllers/todo.mjs" />
+    <!-- it must come after loading dom-controller.js -->
+    <script src="/controllers/to-do/fancy.js" defer></script>
 </head>
 <body>
-    <!-- controller will attach to this div -->	
-    <div controller="to-do"></div>
+    <!-- controller will attach to this ul -->	
+    <ul controller="fancy">
+        <li>Caviar</li>
+        <li>Champagne</li>
+    </ul>
 </body>
 ```
-`Dom-Controller` will flag the script as a module if the extension is `.mjs` or if `rel="modulepreload"`.
-If you want to load the module as a module without the `.mjs` extension, you can use the `type-is` attribute do the following:
-```html
-<link type-is="module" controller-name="to-do" href="controllers/todo.js" />
-```
-The `type-is` attribute will override any automatic detection of how to load the file.
 
-## Lifecycle Events
-`controller.attached` is dispatched once a controller is attached.
-`controller.detached` is dispatched when the controller is detached.
-
-## Hardcoding Controller Names
 ```js
-DomController.registerController(class SunFish {
-    async attach(element) {
-        /* add your logic to an element */
-        element.classList.add('fishy');
-    }
-    async detach(element) {
-        /* clean up on removal or controller change */
-        element.classList.remove('fishy');
-    }
-}, 'my-hardcoded-name');
-//  ^^^^ this will now be hardcoded
+// controllers/to-do/fancy.js
+class FancyController {
+    async attach(element) { }
+    async detach(element) { }
+}
+
+DomController.registerController(FancyController, 'fancy');
 ```
-Now you can just import it as a script with zero indirection.
+
+```typescript
+// controllers/to-do/fancy.ts
+import { IController } from 'dom-controller/IController';
+
+class FancyController implements IController<HTMLElement> {
+    element!: HTMLElement;
+    async attach(element: HTMLElement): Promise<void> { }
+    async detach(element: HTMLElement): Promise<void> { }
+}
+
+// @ts-ignore
+DomController.registerController(FancyController, 'fancy');
+```
+
+### Script Placement
+If you are using modules, i.e. `*.mjs`/`import`/`export default`, and loading using a `link` controller alias, then the `dom-controller.js` script can be loaded anytime anywhere.
+
+If you aren't using modules, or you're using the `window.DomController.registerController()` call then the library needs to be loaded before any controller. You can speed up loading by using the defer attribute `<script defer ...>`.
+
+### Decoupling
+Here's how you can efficiently reuse a controller for multiple related elements. Elements keep internal state and produce events, controllers talk to the server and update element data. 
+```typescript
+// interfaces/todo-element.ts
+export interface TodoElement extends HTMLUListElement {
+    add(item: Item): void;
+    remove(id: string): void;
+}
+```
+
+```typescript
+// elements/basic-todo.ts
+import { TodoElement } from 'interfaces/todo-element.ts';
+
+class BasicTodo implements TodoElement extends HTMLUListElement {
+    constructor() {...}
+    add(item: Item): void { }
+    remove(id: string): void { }
+}
+
+window.customElements.define('basic-todo', BasicTodo);
+```
+```typescript
+// elements/premium-todo.ts
+import { TodoElement } from 'interfaces/todo-element.ts';
+
+class PremiumTodo implements TodoElement extends HTMLUListElement {
+    constructor() {...}
+    add(item: Item): void { }
+    remove(id: string): void { }
+}
+
+window.customElements.define('premium-todo', PremiumTodo);
+```
+
+```typescript
+// controllers/todo.ts
+import { IController } from 'dom-controller/IController';
+import { TodoElement } from 'interfaces/todo-element.ts';
+
+export default class TodoController implements IController<TodoElement> {
+    element!: TodoElement;
+    async attach(element: TodoElement): Promise<void> {
+        element.add({ id: 1, text: 'Tada 🎉' })
+    }
+    async detach(element: TodoElement): Promise<void> { }
+}
+
+```
 ```html
+<!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
+    <script src="https://unpkg.com/dom-controller@0.4.0/bundle.min.js" defer></script>
+
     <!-- reference the controller -->
-	<script src="controllers/todo.js"></script>
+    <link
+        type-is="module"
+        controller-name="todo"
+        href="/controllers/todo.js"
+    />
 </head>
 <body>
-    <!-- controller will attach to this div -->	
-    <div controller="to-do"></div>
+    <basic-todo controller="todo">
+        <li>Cheez Wiz</li>
+        <li>Grape Soda</li>
+    </basic-todo>
+
+    <premium-todo controller="todo">
+        <li>Caviar</li>
+        <li>Champagne</li>
+    </premium-todo>
 </body>
 ```
-
-
-## Ideal Usage (Opinion)
-#### index.html
-```html
-<head>
-    <!-- include the library from a CDN -->
-    <script defer src="https://unpkg.com/dom-controller@0.3.0/bundle.min.js"></script>
-    <!-- preload as immutable, for an SPA feel -->
-    <link rel="preload" as="script" controller-name="sun-fish" href="sea/fish/sunfish.mjs?v1.2.3" />
-</head>
-<body>
-    <!-- controller will attach to this div -->	
-    <div controller="sun-fish"></div>
-</body>
-```
-#### /sea/fish/sunfish.js
-```js
-export default class SunFish {
-    attach(element) {
-        /* add your logic to an element */
-        element.classList.add('fishy');
-    }
-    detach(element) {
-        /* clean up on removal or controller change */
-        element.classList.remove('fishy');
-    }
-};
-```
-
-## Script Placement
-If you are using modules, i.e. mjs/import/export, and loading using a `link` controller alias, then the `Dom-Controller` library can be loaded anytime anywhere.
-
-If you aren't using modules, or you're using the `window.DomController.registerController` call then the library needs to be loaded before any controller. You can speed up loading by using the defer attribute `<script defer ...>`.
-
-### Run Tests
-Run `npx http-server` at the project root, and in your browser navigate to `http://127.0.0.1:8080/spec/SpecRunner.html`. Adding more tests and higher quality tests is a "to do".
+#### Pros:
+* Helps track breaking changes.
+* Intellisense works well.
+* Interfaces don't add to transpiled size, they are "free".
+* Code reuse / DRY.
+#### Cons:
+* Increased complexity, don't use unless you need it.
