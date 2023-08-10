@@ -2,7 +2,7 @@
 
 Attach behavior to any element in a clear and debuggable way.
 
-**Less 2KB Minified + zipped**
+**Less than 2KB Minified + zipped**
 
 ## Example Usage
 ```html
