@@ -137,12 +137,24 @@ class DomController implements IDomController {
 
 		resolved
 			.then(res => {
-				const controller = new res();
-				controller.element = element;
-				controller.attach(element);
-				element[CONTROLLER_KEY] = controller;
-				element[CONTROLLER_NAME_KEY] = currentValue;
-				element.dispatchEvent(new CustomEvent(this.EVENT_ATTACHED, { detail: { alias: currentValue, controller } }));
+				let controller: IController<HTMLElement>;
+				try {
+					controller = new res();
+					controller.element = element;
+				}
+				catch (error) {
+					console.error(`Error instantiating controller "${currentValue}"`);
+					return;
+				}
+
+				try {
+					controller.attach(element);
+					element[CONTROLLER_KEY] = controller;
+					element[CONTROLLER_NAME_KEY] = currentValue;
+					element.dispatchEvent(new CustomEvent(this.EVENT_ATTACHED, { detail: { alias: currentValue, controller } }));
+				} catch (error) {
+					console.error(`Error attaching controller "${currentValue}"`, error);
+				}
 			})
 			.catch(err => {
 				// report only once

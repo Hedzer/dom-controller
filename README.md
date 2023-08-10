@@ -1,11 +1,15 @@
 # dom-controller
 
+Attach behavior to any element in a clear and debuggable way.
+
+**Less 2KB Minified + zipped**
+
 ## Example Usage
 ```html
 <!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.4.0/bundle.min.js" defer></script>
+    <script src="https://unpkg.com/dom-controller@0.4.1/bundle.min.js" defer></script>
 
     <!-- reference the controller -->
     <link controller-name="fancy" href="/controllers/to-do/fancy.mjs" />
@@ -74,7 +78,7 @@ Preload will tell your browser to load the scripts in advance. This is especiall
 <!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.4.0/bundle.min.js" defer></script>
+    <script src="https://unpkg.com/dom-controller@0.4.1/bundle.min.js" defer></script>
 
     <!-- reference the controller -->
     <!-- it must come after loading dom-controller.js -->
@@ -171,7 +175,7 @@ export default class TodoController implements IController<TodoElement> {
 <!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.4.0/bundle.min.js" defer></script>
+    <script src="https://unpkg.com/dom-controller@0.4.1/bundle.min.js" defer></script>
 
     <!-- reference the controller -->
     <link
