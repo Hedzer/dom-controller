@@ -2,14 +2,14 @@
 
 Attach behavior to any element in a clear and debuggable way.
 
-**Less than 2KB Minified + zipped**
+**Less than 2KB minified + zipped**
 
 ## Example Usage
 ```html
 <!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.4.1/bundle.min.js" defer></script>
+    <script src="https://unpkg.com/dom-controller@0.4.2/bundle.min.js" defer></script>
 
     <!-- reference the controller -->
     <link controller-name="fancy" href="/controllers/to-do/fancy.mjs" />
@@ -26,8 +26,19 @@ Attach behavior to any element in a clear and debuggable way.
 ```js
 // controllers/to-do/fancy.mjs
 export default class FancyController {
-    async attach(element) { }
-    async detach(element) { }
+
+    // called when [controller="fancy"] is set
+    async attach(element) { 
+        add_save_events(element);
+        load_items(element);
+    }
+
+    // called when [controller] is changed or removed
+    async detach(element) {
+        cancel_load_items(element);
+        remove_save_events(element);
+    }
+
 }
 ```
 
@@ -78,7 +89,7 @@ Preload will tell your browser to load the scripts in advance. This is especiall
 <!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.4.1/bundle.min.js" defer></script>
+    <script src="https://unpkg.com/dom-controller@0.4.2/bundle.min.js" defer></script>
 
     <!-- reference the controller -->
     <!-- it must come after loading dom-controller.js -->
@@ -175,7 +186,7 @@ export default class TodoController implements IController<TodoElement> {
 <!-- index.html -->
 <head>
     <!-- include the library -->
-    <script src="https://unpkg.com/dom-controller@0.4.1/bundle.min.js" defer></script>
+    <script src="https://unpkg.com/dom-controller@0.4.2/bundle.min.js" defer></script>
 
     <!-- reference the controller -->
     <link
