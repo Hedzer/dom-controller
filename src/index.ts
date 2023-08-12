@@ -135,6 +135,8 @@ class DomController implements IDomController {
 		// if the new value is false, meaning null, just remove nd exit here
 		if (!currentValue) { return; }
 
+		resolved.catch(err => console.error(`Error resolving controller "${currentValue}"`, err));
+
 		resolved
 			.then(res => {
 				let controller: IController<HTMLElement>;
