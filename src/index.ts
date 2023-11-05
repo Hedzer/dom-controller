@@ -132,13 +132,16 @@ class DomController implements IDomController {
 		const resolved = this.resolved[currentValue];
 		this.detachController(element);
 
-		// if the new value is false, meaning null, just remove nd exit here
+		// if the new value is false, meaning null, just remove and exit here
 		if (!currentValue) { return; }
 
 		resolved.catch(err => console.error(`Error resolving controller "${currentValue}"`, err));
 
 		resolved
 			.then(res => {
+				// we need to check again here, since the promise might have been resolved later
+				if (oldController == currentValue || element[CONTROLLER_NAME_KEY] == currentValue) { return; }
+
 				let controller: IController<HTMLElement>;
 				try {
 					controller = new res();
